@@ -1,1 +1,1 @@
-Quiz Game 
+Welcome to my Quiz Game! 
