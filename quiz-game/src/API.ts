@@ -19,11 +19,12 @@ export const fetchQuizQuestions = async (
   amount: number,
   difficulty: Difficulty
 ) => {
-  const endpoint = `https://opentdb.com/api.php?amount=${amount}&difficulty=${difficulty}&type=multiple&encode=url3986`;
-  const data = await await (await fetch(endpoint)).json();
+  const endpoint = `https://opentdb.com/api.php?amount=${amount}&difficulty=${difficulty}&type=multiple`;
+  const data = await (await fetch(endpoint)).json();
   return data.results.map((question: Question) => ({
     ...question,
-    answer: ShuffleArray([
+    //answers array constains correct answer and incorrect answers shuffled
+    answers: ShuffleArray([
       ...question.incorrect_answers,
       question.correct_answer,
     ]),

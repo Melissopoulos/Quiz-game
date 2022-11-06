@@ -16,22 +16,24 @@ const Question: React.FC<Props> = ({
   userAnswer,
   questionNumber,
   totalQuestions,
-}) => (
-  <div>
-    <p>
-      Question {questionNumber} / {totalQuestions}
-    </p>
-    <p dangerouslySetInnerHTML={{ __html: question }} />
+}) => {
+  return (
     <div>
-      {answers.map((answer) => (
-        <div>
-          <button disabled={userAnswer} onClick={callback}>
-            <span dangerouslySetInnerHTML={{ __html: answer }} />
-          </button>
-        </div>
-      ))}
+      <p>
+        Question {questionNumber} / {totalQuestions}
+      </p>
+      <p dangerouslySetInnerHTML={{ __html: question }} />
+      <div>
+        {answers?.map((answer) => (
+          <div key={answer}>
+            <button disabled={userAnswer} value={answer} onClick={callback}>
+              <span dangerouslySetInnerHTML={{ __html: answer }} />
+            </button>
+          </div>
+        ))}
+      </div>
     </div>
-  </div>
-);
+  );
+};
 
 export default Question;
