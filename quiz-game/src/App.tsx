@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { fetchQuizQuestions } from "./API";
 //components
 import Question from "./components/Question";
+import Results from "./components/Results";
 //types
 import { QuestionState, Difficulty } from "./API";
 
@@ -57,17 +58,23 @@ const App = () => {
       //Check answer against the correct answer
       const correct = questions[number].correct_answer === answer;
       const difficulty = questions[number].difficulty;
-      console.log(difficulty);
       //Add score if its correct for each difficulty
-      if (correct && difficulty === "easy")
+      if (correct && difficulty === "easy") {
         setScoreEasyQuestions((prev) => prev + 15);
-      if (correct && difficulty === "medium")
-        setScoreMediumQuestions((prev) => prev + 18);
-      if (correct && difficulty === "hard")
-        setScoreHardQuestions((prev) => prev + 25);
-      //Add all scores to Total score
-      setScore(scoreEasyQuestions + scoreMediumQuestions + scoreHardQuestions);
+        setCorrectAnswers((prev) => prev + 1);
+      }
 
+      if (correct && difficulty === "medium") {
+        setScoreMediumQuestions((prev) => prev + 18);
+        setCorrectAnswers((prev) => prev + 1);
+      }
+
+      if (correct && difficulty === "hard") {
+        setScoreHardQuestions((prev) => prev + 25);
+        setCorrectAnswers((prev) => prev + 1);
+      }
+      //Add all scores on Total score
+      setScore(scoreEasyQuestions + scoreMediumQuestions + scoreHardQuestions);
       //Save answer in the array of userAnswers
       const answerObject = {
         question: questions[number].question,
@@ -97,14 +104,14 @@ const App = () => {
   const [scoreEasyQuestions, setScoreEasyQuestions] = useState(0);
   const [scoreMediumQuestions, setScoreMediumQuestions] = useState(0);
   const [scoreHardQuestions, setScoreHardQuestions] = useState(0);
+  const [correctAnswers, setCorrectAnswers] = useState(0);
 
   return (
     <div className="App">
       <h1>Frivolous Hunter</h1>
-      {gameOver || userAnswers.length === TOTAL_QUESTIONS ? (
+      {gameOver && userAnswers.length === 0 ? (
         <button onClick={startTrivia}>Start</button>
       ) : null}
-      {!gameOver && <p>Score{score}</p>}
       {loading && <p>Loading Questions...</p>}
       {!loading && !gameOver && (
         <Question
@@ -116,12 +123,18 @@ const App = () => {
           callback={checkAnswer}
         />
       )}
-      {!gameOver &&
-        !loading &&
-        userAnswers.length === number + 1 &&
-        number !== TOTAL_QUESTIONS - 1 && (
-          <button onClick={nextQuestion}>Next</button>
-        )}
+      {!gameOver && !loading && userAnswers.length === number + 1 && (
+        <button onClick={nextQuestion}>
+          {userAnswers.length === TOTAL_QUESTIONS ? "Finish" : "Next"}
+        </button>
+      )}
+      {gameOver && userAnswers.length === TOTAL_QUESTIONS && (
+        <Results
+          score={score}
+          totalQuestions={TOTAL_QUESTIONS}
+          correctAnswers={correctAnswers}
+        />
+      )}
     </div>
   );
 };
