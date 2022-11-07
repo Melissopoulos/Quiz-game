@@ -13,9 +13,9 @@ const Results: React.FC<Props> = ({
   return (
     <div>
       <h1>Congratulations!!!</h1>
-      <h3>Your score is {score}</h3>
+      <h3>Your score is {score}!!!</h3>
       <h4>
-        {correctAnswers}/{totalQuestions}
+        Your correct answers are: {correctAnswers}/{totalQuestions}
       </h4>
     </div>
   );
