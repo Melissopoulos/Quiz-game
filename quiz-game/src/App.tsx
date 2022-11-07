@@ -13,17 +13,36 @@ type AnswerObject = {
 };
 
 const TOTAL_QUESTIONS = 15;
+const TOTAL_QUESTIONS_EASY = 5;
+const TOTAL_QUESTIONS_MEDIUM = 5;
+const TOTAL_QUESTIONS_HARD = 5;
 
 const App = () => {
   const startTrivia = async () => {
     setLoading(true);
     setGameOver(false);
-
-    const newQuestions = await fetchQuizQuestions(
-      TOTAL_QUESTIONS,
+    //fetch easy questions
+    const newQuestionsEasy = await fetchQuizQuestions(
+      TOTAL_QUESTIONS_EASY,
       Difficulty.EASY
     );
-    setQuestions(newQuestions);
+    //fetch medium questions
+    const newQuestionsMedium = await fetchQuizQuestions(
+      TOTAL_QUESTIONS_MEDIUM,
+      Difficulty.MEDIUM
+    );
+    //fetch hard questions
+    const newQuestionsHard = await fetchQuizQuestions(
+      TOTAL_QUESTIONS_HARD,
+      Difficulty.HARD
+    );
+    //Put all questions together
+    const mergedQuestions = [
+      ...newQuestionsEasy,
+      ...newQuestionsMedium,
+      ...newQuestionsHard,
+    ];
+    setQuestions(mergedQuestions);
     setScore(0);
     setNumber(0);
     setUserAnswers([]);
