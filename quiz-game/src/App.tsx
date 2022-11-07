@@ -43,6 +43,7 @@ const App = () => {
       ...newQuestionsHard,
     ];
     setQuestions(mergedQuestions);
+    console.log(mergedQuestions);
     setScore(0);
     setNumber(0);
     setUserAnswers([]);
@@ -55,8 +56,18 @@ const App = () => {
       const answer = e.currentTarget.value;
       //Check answer against the correct answer
       const correct = questions[number].correct_answer === answer;
-      //Add score if its correct
-      if (correct) setScore((prev) => prev + 1);
+      const difficulty = questions[number].difficulty;
+      console.log(difficulty);
+      //Add score if its correct for each difficulty
+      if (correct && difficulty === "easy")
+        setScoreEasyQuestions((prev) => prev + 15);
+      if (correct && difficulty === "medium")
+        setScoreMediumQuestions((prev) => prev + 18);
+      if (correct && difficulty === "hard")
+        setScoreHardQuestions((prev) => prev + 25);
+      //Add all scores to Total score
+      setScore(scoreEasyQuestions + scoreMediumQuestions + scoreHardQuestions);
+
       //Save answer in the array of userAnswers
       const answerObject = {
         question: questions[number].question,
@@ -83,6 +94,9 @@ const App = () => {
   const [userAnswers, setUserAnswers] = useState<AnswerObject[]>([]);
   const [score, setScore] = useState(0);
   const [gameOver, setGameOver] = useState(true);
+  const [scoreEasyQuestions, setScoreEasyQuestions] = useState(0);
+  const [scoreMediumQuestions, setScoreMediumQuestions] = useState(0);
+  const [scoreHardQuestions, setScoreHardQuestions] = useState(0);
 
   return (
     <div className="App">
@@ -90,7 +104,7 @@ const App = () => {
       {gameOver || userAnswers.length === TOTAL_QUESTIONS ? (
         <button onClick={startTrivia}>Start</button>
       ) : null}
-      {!gameOver && <p>Score</p>}
+      {!gameOver && <p>Score{score}</p>}
       {loading && <p>Loading Questions...</p>}
       {!loading && !gameOver && (
         <Question
